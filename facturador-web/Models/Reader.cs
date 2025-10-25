@@ -19,7 +19,7 @@ namespace facturador_web.Models
             do
             {
                 //Imprimimos el mensaje en consola
-                Console.WriteLine(message);
+                Console.Write(message);
                 //le asignamos el valor de la consola a la variable input
                 input = Console.ReadLine();
 
@@ -30,23 +30,23 @@ namespace facturador_web.Models
             return input.Trim();
         }
 
-        public static int IntReader(string message)
+        public static int IntReader()
         {
             //Declaracion de variables
-            string? input;
+            
+            string input;
             int intValue;
 
             do
             {
-                //Imprimimos el mensaje en consola
-                Console.WriteLine(message);
-                //le asignamos el valor de la consola a la variable input
                 input = Console.ReadLine();
 
-                //Si el valor de input es nulo o vacio, volvemos a pedir el valor
-            } while (string.IsNullOrEmpty(input) || !int.TryParse(input, out intValue));
-            
-            //Retornamos el valor de input convertido a entero
+                if (string.IsNullOrEmpty(input)||!int.TryParse(input, out intValue))
+                {
+                    Console.WriteLine("Entrada inválida. Por favor, ingrese un número entero:");
+                }
+
+            } while (string.IsNullOrEmpty(input)||!int.TryParse(input, out intValue));
             return intValue;
         }
 
@@ -59,7 +59,7 @@ namespace facturador_web.Models
             do
             {
                 //Imprimimos el mensaje en consola
-                Console.WriteLine(message);
+                Console.Write(message);
                 //le asignamos el valor de la consola a la variable input
                 input = Console.ReadLine();
 

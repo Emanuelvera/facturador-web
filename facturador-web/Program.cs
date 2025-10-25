@@ -1,7 +1,10 @@
-﻿internal class Program
+﻿using facturador_web.Models;
+internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Manager manager = new Manager();
+
+        manager.RunApp();
     }
 }
