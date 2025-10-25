@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace facturador_web.Models
 {
-    internal class Presenter
+    internal class Factura
     {
     }
 }
