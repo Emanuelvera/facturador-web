@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace facturador_web.Models
 {
-    internal class Writer
+    public class Writer
     {
         // Menu Principal
         public static int ShowMainMenu()
