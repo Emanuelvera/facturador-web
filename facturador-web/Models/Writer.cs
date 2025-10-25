@@ -11,6 +11,7 @@ namespace facturador_web.Models
         // Menu Principal
         public static int ShowMainMenu()
         {
+            Console.Clear();
             Console.WriteLine(new string('-', 100));
             Console.WriteLine("Bienvenido al Facurador Web de ARCA");
             Console.WriteLine(new string('-', 100));
@@ -23,6 +24,7 @@ namespace facturador_web.Models
         // Menu Gestion de Clientes
         public static int ShowCustomerMenu()
         {
+            Console.Clear();
             Console.WriteLine("Gestion de Clientes");
 
             Console.WriteLine("\n1- Agregar Cliente al Sistema\n2- Modificar Cliente del Sistema" +
@@ -34,6 +36,7 @@ namespace facturador_web.Models
         // Menu Gestion de Facturas
         public static int ShowInvoiceMenu()
         {
+            Console.Clear();
             Console.WriteLine("Gestion de Facturas");
 
             Console.WriteLine("\n1- Emitir Factura\n2- Ver/Consultar Factura\n3- Volver al Menu Anterior");
