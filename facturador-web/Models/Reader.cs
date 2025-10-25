@@ -18,6 +18,12 @@ namespace facturador_web.Models
 
             do
             {
+<<<<<<< HEAD
+=======
+                //Imprimimos el mensaje en consola
+                Console.Write(message);
+                //le asignamos el valor de la consola a la variable input
+>>>>>>> 955e71bc8b4772d5de719fdcc45e16d148034f47
                 input = Console.ReadLine();
                 //Validamos si es nulo o vacio
                 if (string.IsNullOrEmpty(input))
@@ -31,23 +37,37 @@ namespace facturador_web.Models
             return input.Trim();
         }
 
-        public static int IntReader(string message)
+        public static int IntReader()
         {
+<<<<<<< HEAD
             string? input;
+=======
+            //Declaracion de variables
+            
+            string input;
+>>>>>>> 955e71bc8b4772d5de719fdcc45e16d148034f47
             int intValue;
 
             do
             {
                 input = Console.ReadLine();
 
+<<<<<<< HEAD
                 if (string.IsNullOrEmpty(input) || !int.TryParse(input, out intValue))
+=======
+                if (string.IsNullOrEmpty(input)||!int.TryParse(input, out intValue))
+>>>>>>> 955e71bc8b4772d5de719fdcc45e16d148034f47
                 {
                     Console.WriteLine("Entrada inválida. Por favor, ingrese un número entero:");
                 }
 
+<<<<<<< HEAD
             } while (string.IsNullOrEmpty(input) || !int.TryParse(input, out intValue));
 
             //Retornamos el valor de input sin espacios en blanco al inicio o al final
+=======
+            } while (string.IsNullOrEmpty(input)||!int.TryParse(input, out intValue));
+>>>>>>> 955e71bc8b4772d5de719fdcc45e16d148034f47
             return intValue;
         }
 
@@ -59,6 +79,12 @@ namespace facturador_web.Models
 
             do
             {
+<<<<<<< HEAD
+=======
+                //Imprimimos el mensaje en consola
+                Console.Write(message);
+                //le asignamos el valor de la consola a la variable input
+>>>>>>> 955e71bc8b4772d5de719fdcc45e16d148034f47
                 input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input) || !float.TryParse(input, out floatValue))
                 {

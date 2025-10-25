@@ -16,10 +16,38 @@ namespace facturador_web.Models
 
         public void RunApp()
         {
-            Writer.ShowMainMenu();
+            int option;
+            bool main = true;
+            while (main)
+            {
+                Writer.ShowMainMenu();
+                option = Reader.IntReader();
+                
+
+                switch (option)
+                {
+                    case 1:
+                        Console.WriteLine("1");
+                        Console.ReadKey();
+                        break;
+                        
+                    case 2:
+                        Console.WriteLine("2");
+                        Console.ReadKey();
+                        break;
+
+                    case 3:
+                        Console.WriteLine("3");
+                        main = false;
+                        Writer.CloseProgram();
+                        break;
+
+                    default:
+                        Console.WriteLine("Error");
+                        Console.ReadKey();
+                        break;
+                }
+            }
         }
-
-        
-
     }
 }
