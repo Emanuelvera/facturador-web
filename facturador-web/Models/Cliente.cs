@@ -1,17 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace facturador_web.Models
 {
-    internal class Cliente
+    public class Cliente
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required]
         public int CuilCuit { get; set; }
-        public string RazonSocial { get; set; }
-        public string Domicilio { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string CompanyName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Address { get; set; }
+
+        //RELACIONES
+        public List<Factura> Facturas { get; set; } = new List<Factura>();
+
+
 
         public static bool ValidarCuilCuit(int CuilCuit)
         {
@@ -28,7 +43,5 @@ namespace facturador_web.Models
             string cuilCuitStr = CuilCuit.ToString();
             return cuilCuitStr.Insert(2, "-").Insert(11, "-");
         }
-        
-
     }
 }
