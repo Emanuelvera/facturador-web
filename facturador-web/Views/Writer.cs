@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace facturador_web.Models
+namespace facturador_web.Views
 {
     public class Writer
     {

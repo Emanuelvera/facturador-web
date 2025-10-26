@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using facturador_web.Models;
+using facturador_web.Views;
 
 
-namespace facturador_web.Models
+namespace facturador_web.Controllers
 {
     internal class Manager
     {
@@ -50,6 +50,10 @@ namespace facturador_web.Models
                                 case 3:
                                     main2 = false;
                                     break;
+                                default:
+                                    Console.WriteLine("Error...");
+                                    Console.ReadKey();
+                                    break;
                             }
                         }
 
@@ -83,6 +87,10 @@ namespace facturador_web.Models
                                     break;
                                 case 5:
                                     main2 = false;
+                                    break;
+                                default:
+                                    Console.WriteLine("Error...");
+                                    Console.ReadKey();
                                     break;
                             }
                         }
