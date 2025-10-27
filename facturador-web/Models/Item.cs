@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,13 +13,17 @@ namespace facturador_web.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [StringLength(150)]
         public string Description { get; set; }
+
         [Required]
         public int Quantity { get; set; }
+
         [Required]
         public float Amount { get; set; }
+
         [Required]
         public int FacturaId { get; set; }
 

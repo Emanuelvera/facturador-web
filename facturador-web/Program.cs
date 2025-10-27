@@ -8,27 +8,40 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Manager manager = new Manager();
-
-        manager.RunApp();
-
-        // 🔧 1. Crear el contenedor de servicios
+        //Crear el contenedor de servicios
         var serviceCollection = new ServiceCollection();
 
-        // 🔧 2. Registrar el DbContext con SQLite
+        //Registrar el DbContext con SQLite
         serviceCollection.AddDbContext<AppDbContext>(options =>
             options.UseSqlite("Data Source=facturador.db"));
 
-        // 🔧 3. Construir el contenedor (ServiceProvider)
+        // Registrar Manager en el contenedor
+        serviceCollection.AddTransient<Manager>();
+
+        //Construir el contenedor (ServiceProvider)
         var serviceProvider = serviceCollection.BuildServiceProvider();
 
-        // 🔧 4. Obtener una instancia del DbContext
+        //Obtener el Manager ya configurado con el contexto
+        var manager = serviceProvider.GetRequiredService<Manager>();
+
+        //Obtener una instancia del DbContext
         var db = serviceProvider.GetRequiredService<AppDbContext>();
 
-        // 🔧 5. Asegurar migraciones aplicadas
+        //Asegurar migraciones aplicadas
         db.Database.Migrate();
 
-        Console.WriteLine("✅ Base de datos inicializada correctamente.");
+        if (!db.Clientes.Any())
+        {
+            db.Clientes.Add(new Cliente
+            {
+                CompanyName = "Stellantis",
+                CuilCuit = 2038178877,
+                Address = "Calle falsa 123"
+            });
+            db.SaveChanges();
+        }
+
+        manager.RunApp();
 
     }
 }

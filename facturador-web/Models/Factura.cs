@@ -10,15 +10,18 @@ namespace facturador_web.Models
 {
     public class Factura
     {
+        [Required]
+        public char Type  { get; set; }
+
         [Key]
         public int Number { get; set; }
-        [Required]
 
-        public char Type { get; set; }
         [Required]
         public DateTime Date { get; set; }
+
         [Required]
         public float TotalAmount { get; set; }
+
         [Required]
         public int ClienteId { get; set; }
 
@@ -28,10 +31,10 @@ namespace facturador_web.Models
         public Cliente Cliente { get; set; }
 
         public List<Item> Items { get; set; } = new List<Item>();
-
+        
         public void GenerateInvoiceNumber()
         {
-
+            
         }
 
         public void CalculateTotalAmount()

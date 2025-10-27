@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace facturador_web.Views
 {
-    internal class Reader
+    public class Reader
     {
         //El reader siempre va a recibir un message que es el que se envia desde Writer
 
@@ -71,7 +71,7 @@ namespace facturador_web.Views
             return floatValue;
         }
 
-        public char CharReader()
+        public static char CharReader()
         {
             //Declaracion de variable input
             string? input;

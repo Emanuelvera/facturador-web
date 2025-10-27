@@ -14,12 +14,9 @@ namespace facturador_web.Data
         public DbSet<Factura> Facturas { get; set; }
         public DbSet<Item> Items { get; set; }
 
-
-
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-    :   base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-        }
 
+        }
     }
 }

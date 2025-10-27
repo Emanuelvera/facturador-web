@@ -22,11 +22,11 @@ namespace facturador_web.Models
         [Required]
         [StringLength(100)]
         public string Address { get; set; }
-        
+
         //RELACIONES
         public List<Factura> Facturas { get; set; } = new List<Factura>();
 
-        
+
 
         public static bool ValidarCuilCuit(int CuilCuit)
         {
