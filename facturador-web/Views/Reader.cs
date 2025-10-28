@@ -20,32 +20,33 @@ namespace facturador_web.Views
             {
                 input = Console.ReadLine();
                 //Validamos si es nulo o vacio
-                if (string.IsNullOrEmpty(input))
+                if (string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input))
                 {
                     Console.WriteLine("Entrada inválida. Por favor, ingrese un valor válido:");
                 }
-
-            } while (string.IsNullOrEmpty(input));
+                
+            } while (string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input));
 
             //Retornamos el valor de input sin espacios en blanco al inicio o al final
             return input.Trim();
         }
 
-        public static int IntReader()
+        public static long IntReader()
         {
             string? input;
-            int intValue;
+            long intValue;
 
             do
             {
                 input = Console.ReadLine();
 
-                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out intValue))
+                if (string.IsNullOrEmpty(input) || !long.TryParse(input, out intValue))
                 {
                     Console.WriteLine("Entrada inválida. Por favor, ingrese un número entero:");
                 }
 
-            } while (string.IsNullOrEmpty(input) || !int.TryParse(input, out intValue));
+            } while (string.IsNullOrEmpty(input) || !long.TryParse(input, out intValue));
+
 
             //Retornamos el valor de input sin espacios en blanco al inicio o al final
             return intValue;

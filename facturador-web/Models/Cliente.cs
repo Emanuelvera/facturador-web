@@ -1,4 +1,5 @@
-﻿using System;
+﻿using facturador_web.Views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,13 +8,17 @@ using System.Threading.Tasks;
 
 namespace facturador_web.Models
 {
+
     public class Cliente
     {
+        Reader reader = new Reader();
+
+
         [Key]
         public int Id { get; set; }
 
         [Required]
-        public int CuilCuit { get; set; }
+        public long CuilCuit { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -28,20 +33,22 @@ namespace facturador_web.Models
 
 
 
-        public static bool ValidarCuilCuit(int CuilCuit)
+        public static bool ValidarCuilCuit(long CuilCuit)
         {
             string cuilCuitStr = CuilCuit.ToString();
             if (cuilCuitStr.Length != 11)
             {
-                Console.Write("Ingrese un numero de cuit o cuil valido, sin caracteres especiales o espacios");
+                Console.WriteLine("Ingrese un numero de cuit o cuil valido, sin caracteres especiales o espacios");
+                return false;
             }
             return true;
         }
 
-        public static string ArmarCuilCuit(int CuilCuit)
+        public static string ArmarCuilCuit(long CuilCuit)
         {
             string cuilCuitStr = CuilCuit.ToString();
             return cuilCuitStr.Insert(2, "-").Insert(11, "-");
         }
+
     }
 }

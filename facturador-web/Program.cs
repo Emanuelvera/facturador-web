@@ -8,10 +8,6 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Manager manager = new Manager();
-
-        manager.RunApp();
-
         //Crear el contenedor de servicios
         var serviceCollection = new ServiceCollection();
 
@@ -19,8 +15,14 @@ internal class Program
         serviceCollection.AddDbContext<AppDbContext>(options =>
             options.UseSqlite("Data Source=facturador.db"));
 
+        // Registrar Manager en el contenedor
+        serviceCollection.AddTransient<Manager>();
+
         //Construir el contenedor (ServiceProvider)
         var serviceProvider = serviceCollection.BuildServiceProvider();
+
+        //Obtener el Manager ya configurado con el contexto
+        var manager = serviceProvider.GetRequiredService<Manager>();
 
         //Obtener una instancia del DbContext
         var db = serviceProvider.GetRequiredService<AppDbContext>();
@@ -28,8 +30,8 @@ internal class Program
         //Asegurar migraciones aplicadas
         db.Database.Migrate();
 
-        Console.WriteLine("✅ Base de datos inicializada correctamente.");
 
-        
+        manager.RunApp();
+
     }
 }
