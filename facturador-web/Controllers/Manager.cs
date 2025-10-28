@@ -60,7 +60,6 @@ namespace facturador_web.Controllers
                                     break;
                                 case 2:
                                     this.GetBills();
-                                    Console.WriteLine("Consultaste Cliente");
                                     Console.ReadKey();
                                     break;
                                 case 3:
@@ -139,37 +138,23 @@ namespace facturador_web.Controllers
         {
             char typeValue;
             bool flag = false;
+            bool flag2 = false;
+            bool flag3 = false;
+
 
             //==============================================================
             //              RAZON SOCIAL Y BUSQUEDA CLIENTE
             //==============================================================
 
             Console.Clear();
-            Console.Write("Ingrese razon social: ");
-            string name = Reader.StringReader();
-
-            Console.WriteLine("Buscando cliente ...\n");
-
-            var cliente = _context.Clientes.FirstOrDefault(c => c.CompanyName.Trim().ToLower() == name.Trim().ToLower());
-
-            if (cliente == null)
-            {
-                Console.WriteLine("⚠️ Cliente no encontrado. Presione una tecla para volver al menu principal");
-                Console.ReadKey();
-                return;
-            }
-            else
-            {
-                Console.WriteLine($"Cliente encontrado: {cliente.CompanyName}, Presione una tecla para continuar");
-                Console.ReadKey();
-            }
+            var cliente = GetByCompanyName();
 
             //==============================================================
             //              TIPO DE FACTURA
             //==============================================================
+
             do
             {
-
                 Console.Clear();
                 Console.Write("Ingrese el tipo de factura (A, B, C): ");
                 typeValue = Reader.CharReader();
@@ -185,23 +170,48 @@ namespace facturador_web.Controllers
                 }
             } while (!flag);
 
-
             //==============================================================
             //              PREVIEW
             //==============================================================
+            int nextNumber = 1;
+            var lastFactura = _context.Facturas.OrderByDescending(f => f.Number).FirstOrDefault();
+            if (lastFactura != null)
+                nextNumber = lastFactura.Number + 1;
             do
             {
                 Console.Clear();
-                Console.WriteLine($"Factura:           |{typeValue}");
-                Console.WriteLine($"Numero:            |");
-                Console.WriteLine($"Fecha:             |{DateTime.Now}\n");
-                Console.WriteLine($"Razon Social:      |{name}");
-                Console.WriteLine($"Factura:           |");
-                Console.WriteLine($"Factura:           |");
-                Console.WriteLine($"Factura:           |");
-                Console.WriteLine($"Factura:           |");
-
-            } while (!flag);
+                Console.WriteLine($"Factura a emitir (A, B o C): {typeValue}");
+                Console.WriteLine($"Cliente: {cliente.CompanyName}\n");
+                Console.WriteLine($"-----------------------------------------");
+                Console.WriteLine($"Factura:            {typeValue}");
+                Console.WriteLine($"Numero:             {nextNumber}");
+                Console.WriteLine($"Fecha:              {DateTime.Now.ToShortDateString()}\n");
+                Console.WriteLine($"Razon Social:       {cliente.CompanyName}");
+                Console.WriteLine($"Cuil/Cuit:          {Cliente.ArmarCuilCuit(cliente.CuilCuit)}");
+                Console.WriteLine($"Domicilio:          {cliente.Address}");
+                Console.WriteLine($"-----------------------------------------\n");
+                Console.Write("¿Los datos son correctos? (S/N): ");
+                char respuesta = Reader.CharReader();
+                respuesta = char.ToUpper(respuesta);
+                if (respuesta != 'S')
+                {
+                    if (respuesta == 'N')
+                    {
+                        Console.WriteLine("Factura no emitida.\n\nPresione una tecla para volver al menú principal.");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nOpcion invalida por favor ingrese S o N.\n\nPresione una tecla para volver a ingresar.");
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    flag2 = true;  
+                }
+            } while (!flag2);
 
             //==============================================================
             //              ITEMS
@@ -226,14 +236,62 @@ namespace facturador_web.Controllers
                 TotalAmount = items.Sum(i => i.Amount) //  Calcula el total automáticamente
             };
 
+            do
+            {
+            Console.Clear();
+            Console.WriteLine($"\n-----------------------------------------");
+            Console.WriteLine($"Factura:            {typeValue}");
+            Console.WriteLine($"Numero:             {nextNumber}");
+            Console.WriteLine($"Fecha:              {DateTime.Now.ToShortDateString()}\n");
+            Console.WriteLine($"Razon Social:       {cliente.CompanyName}");
+            Console.WriteLine($"Cuil/Cuit:          {Cliente.ArmarCuilCuit(cliente.CuilCuit)}");
+            Console.WriteLine($"Domicilio:          {cliente.Address}");
+            Console.WriteLine($"-----------------------------------------");
+
+            foreach (var item in items)
+            { 
+                Console.WriteLine($"Item:           {item.Description}");
+                Console.WriteLine($"Cantidad:       {item.Quantity}");
+                Console.WriteLine($"Precio:         {item.Amount}$");
+                Console.WriteLine($"-----------------------------------------");
+            }
+            Console.WriteLine($"Importe Total:      {items.Sum(i => i.Amount)}");
+            
+            Console.Write("\n¿Desea emitir esta factura?? (S/N): ");
+            char emitir = Reader.CharReader();
+            emitir = char.ToUpper(emitir);
+            if (emitir != 'S')
+            {
+                if (emitir == 'N')
+                {
+                    Console.WriteLine("Factura no emitida.\n\nPresione una tecla para volver al menú principal.");
+                    Console.ReadKey();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("\nOpcion invalida por favor ingrese S o N.\n\nPresione una tecla para volver a ingresar.");
+                    Console.ReadKey();
+                }
+            }
+            else
+                {
+                    flag3 = true;
+                }
+            } while (!flag3);
+
             _context.Facturas.Add(factura);
             _context.SaveChanges();
 
-            Console.WriteLine($"Factura creada con éxito para {cliente.CompanyName}");
-            Console.WriteLine($"Número: {factura.Number} | Tipo: {factura.Type} | Total: ${factura.TotalAmount}");
+            Console.WriteLine($"\nFactura creada con éxito para {cliente.CompanyName}");
+            Console.WriteLine($"\nPresione una tecla para salir");
             Console.ReadKey();
         }
 
+
+        //==============================================================
+        //             CARGAR ITEMS
+        //==============================================================
         private List<Item> LoadItems()
         {
             var items = new List<Item>();
@@ -257,50 +315,67 @@ namespace facturador_web.Controllers
                     Quantity = quantity,
                     Amount = totalPrice
                 };
+                //Desea agregar el item a la lista
                 items.Add(item);
+                //Guardar items en la base de datos
 
-                Console.WriteLine($"Item agregado: {itemName}, Cantidad: {quantity}, Precio Unitario: {totalPrice}");
+                Console.WriteLine($"\nItem agregado: {itemName}, Cantidad: {quantity}, Precio total: {totalPrice}");
                 Console.ReadKey();
-                Console.WriteLine("¿Desea agregar otro item? (S/N): ");
+                Console.WriteLine("\n¿Desea agregar otro item? (S/N): ");
+
                 char respuesta = Reader.CharReader();
                 respuesta = char.ToUpper(respuesta);
                 if (respuesta != 'S')
                 {
-                    masItems = false;
+                    if (respuesta == 'N')
+                    {
+                        masItems = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nOpcion invalida por favor ingrese S o N.\n\nPresione una tecla para volver a ingresar.");
+                        Console.ReadKey();
+                    }
                 }
             }
             return items;
         }
 
-        /*public string GetCompanyName()
+        //==============================================================
+        //              TRAER CLIENTE POR RAZON SOCIAL
+        //==============================================================
+
+        public Cliente GetByCompanyName()
         {
-            string name;
+            Cliente cliente = null;
             bool flag = false;
             do
             {
-                Console.WriteLine("Ingrese razon social\n");
-                name = Reader.StringReader();
+                Console.Clear();
+                Console.Write("Ingrese razón social: ");
+                string name = Reader.StringReader();
 
-                Console.WriteLine("Buscando cliente ...");
+                Console.WriteLine("\nBuscando cliente ...");
 
-                var cliente = _context.Clientes.FirstOrDefault(c => c.CompanyName.Trim().ToLower() == name.Trim().ToLower());
+                cliente = _context.Clientes.FirstOrDefault(
+                    c => c.CompanyName.Trim().ToLower() == name.Trim().ToLower());
 
                 if (cliente == null)
                 {
-                    Console.WriteLine("Cliente no encontrado, presione una tecla para intentar nuevamente.");
+                    Console.WriteLine("\nCliente no encontrado. \nPresione una tecla para intentar nuevamente.");
                     Console.ReadKey();
                 }
                 else
                 {
-                    Console.WriteLine($"Cliente encontrado: {cliente.CompanyName}, presione una tecla para seguir");
+                    Console.WriteLine($"\nCliente encontrado: {cliente.CompanyName}. \n\nPresione una tecla para seguir");
                     Console.ReadKey();
                     flag = true;
                 }
 
             } while (!flag);
-            return name;
+            return cliente;
 
-        }*/
+        }
 
 
         ////////////////////////////////////////////////////////////////
@@ -311,37 +386,15 @@ namespace facturador_web.Controllers
         {
             bool flag = false;
             string name;
-            Cliente cliente = null;
 
             //==============================================================
             //              BUSQUEDA DE CLIENTE
             //==============================================================
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("Ingrese razón social del cliente:");
-                name = Reader.StringReader();
-
-                Console.WriteLine("Buscando cliente...");
-
-                cliente = _context.Clientes.FirstOrDefault(c => c.CompanyName.Trim().ToLower() == name.Trim().ToLower());
-
-                if (cliente == null)
-                {
-                    Console.WriteLine("⚠️ Cliente no encontrado, presione una tecla para intentar nuevamente.");
-                    Console.ReadKey();
-                }
-                else
-                {
-                    Console.WriteLine($"✅ Cliente encontrado: {cliente.CompanyName}");
-                    Console.ReadKey();
-                    flag = true;
-                }
-
-            } while (!flag);
+            
+            var cliente = GetByCompanyName();
 
             //==============================================================
-            //              OBTENER FACTURAS DEL CLIENTE
+            //              OBTENER FACTURAS DEL CLIENTE                  
             //==============================================================
             var facturas = _context.Facturas
                 .Where(f => f.ClienteId == cliente.Id)
@@ -360,12 +413,11 @@ namespace facturador_web.Controllers
                 int cont = 1;
                 foreach (var factura in facturas)
                 {
-                    Console.WriteLine($"\n📄 Factura #{factura.Number}");
+                    Console.WriteLine($"\n Factura #{factura.Number}");
                     Console.WriteLine($"   Tipo: {factura.Type}");
                     Console.WriteLine($"   Fecha: {factura.Date.ToShortDateString()}");
-                    Console.WriteLine($"   Total: ${factura.TotalAmount}");
+                    
                     Console.WriteLine("   Ítems:");
-
                     if (factura.Items != null && factura.Items.Count > 0)
                     {
                         foreach (var item in factura.Items)
@@ -377,16 +429,13 @@ namespace facturador_web.Controllers
                     {
                         Console.WriteLine("      (Sin ítems)");
                     }
-
                     cont++;
+                    Console.WriteLine($"   Total: ${factura.TotalAmount}");
                 }
             }
-
             Console.WriteLine("\nPresione una tecla para continuar...");
             Console.ReadKey();
         }
-
-
 
     }
 }

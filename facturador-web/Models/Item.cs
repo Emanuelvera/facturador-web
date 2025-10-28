@@ -53,6 +53,5 @@ namespace facturador_web.Models
                 throw new ArgumentException("Amount cannot be negative.");
             }
         }
-
     }
 }
